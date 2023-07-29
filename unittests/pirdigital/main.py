@@ -4,11 +4,10 @@ from machine import Pin,ADC
 from time import sleep
 import time
 
-pir_pin = Pin(6, Pin.IN)
+pir_pin = Pin(7, Pin.IN)
 
-while True:
-    pir_value = pir_pin.value()   
-    value = sensor.read()
+while True: 
+    value = pir_pin.value() 
     print("PIR Value: ",value  )    
     time.sleep(0.1)
 
