@@ -2,7 +2,7 @@
 from machine import Pin, ADC
 from time import sleep
 
-sensor = ADC(0)
+sensor = ADC(3)
 
 # Wiederholung (Endlos-Schleife)
 while True:

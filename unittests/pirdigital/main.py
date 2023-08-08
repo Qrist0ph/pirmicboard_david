@@ -4,7 +4,7 @@ from machine import Pin,ADC
 from time import sleep
 import time
 
-pir_pin = Pin(7, Pin.IN)
+pir_pin = Pin(10, Pin.IN)
 
 while True: 
     value = pir_pin.value() 
