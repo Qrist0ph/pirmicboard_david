@@ -1,16 +1,5 @@
-# 28.10.2022
-# pico w deepsleep patch
-# logCall, battery
-# SimCom 7080G + Pico Script
-# PICO Deep Sleep  Test mit DeepSleep und Normal Modus
-# PICO geht entweder in den deepsleep modus oder in den normal modus
-# falls verzeichnis deepsleep existiert dann deepsleep modus, sonst normal modus
-
-# Google Doc mit Kabelbelegung https://docs.google.com/document/d/1RsIvsyK8wx0Kr5VQp8_xyVW1U5oQrc9f_jCxV8jEb8E/edit#heading=h.ysg6t5dq0tcm
-# Video: https://photos.app.goo.gl/m6BXxvXsR5WaHxxM9
-# ON 1(RX), 2(TX); 13 (GND) , 19 (PWR), 36 (3,3V OUT) , 38 (GND), 39 (VSYS)  â†’ AT OK, LED Blinky langsam
-# wegen wifi: https://peppe8o.com/getting-started-with-wifi-on-raspberry-pi-pico-w-and-micropython/
-
+#01.09.23
+#Connections test
 from machine import Pin, ADC , WDT
 from machine import UART
 
@@ -290,7 +279,8 @@ def checkNetwork():
         
     sendAt("AT+CGATT=1","OK")
     utime.sleep(2)
-    for i in range(1, 10):
+    for i in range(1, 30):
+        print("Runde "+str(i))
         if sendAt("AT+CGATT?", "+CGATT: 1"):
             print('------SIM7080G is online------\r\n')
             break
@@ -478,7 +468,7 @@ while True:
     
     woerterbuch["sleeptime"]=status["sleeptime"]
     woerterbuch["notmoving"]=status["notmoving"]
-    mqttPublish(ccid,woerterbuch,runde)
+    mqttPublish(ccid,woerterbuch,"")
     
     
     print("Machine reset and dann picosleep")
