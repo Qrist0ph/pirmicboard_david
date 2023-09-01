@@ -1,4 +1,5 @@
-#import network
+# 01.09.23
+# Unit Test for going online with modem
 import time
 import machine 
 from machine import UART, Pin
