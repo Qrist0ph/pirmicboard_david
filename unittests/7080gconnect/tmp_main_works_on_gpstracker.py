@@ -2,7 +2,7 @@
 #Connections test
 # GPS Board Rev. 1 OK
 # Oma Alarm Rev. 1 Olesia YES
-# Oma Alarm Rev. 1 David NOPE
+# Oma Alarm Rev. 1 David YES!!!! 1.9.23 1:04. Nach der ersten Reset Runde konnte sich das board verbinden
 
 from machine import Pin, ADC , WDT
 from machine import UART
