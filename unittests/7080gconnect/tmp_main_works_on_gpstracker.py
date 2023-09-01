@@ -1,7 +1,7 @@
 #01.09.23
 #Connections test
 # GPS Board Rev. 1 OK
-# Oma Alarm Rev. 1 Olesia NOPE
+# Oma Alarm Rev. 1 Olesia YES
 # Oma Alarm Rev. 1 David NOPE
 
 from machine import Pin, ADC , WDT
