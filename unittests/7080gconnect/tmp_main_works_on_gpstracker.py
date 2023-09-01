@@ -414,9 +414,9 @@ while True:
     #deepSleepWeiche(status)
  
     print("Enable WatchDogTimer")
-    wdt = WDT(timeout=8000)
+    #wdt = WDT(timeout=8000)
     
-    runde=logCall()
+    #runde=logCall()
     # Neue Batteriespar Logik
     # falls wifis seit 5 loops beim letzen loop ==> hat sich nicht beweget
       # sleep variable auf lang setzen , annotaton auf stillstand
@@ -485,6 +485,7 @@ while True:
     utime.sleep(2)
     wdt.feed()
     machine.reset()
+
 
 
 
