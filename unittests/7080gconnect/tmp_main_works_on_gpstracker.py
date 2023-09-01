@@ -288,6 +288,8 @@ def checkNetwork():
     utime.sleep(2)
     wdt.feed()
         
+    sendAt("AT+CGATT=1","OK")
+    utime.sleep(2)
     for i in range(1, 10):
         if sendAt("AT+CGATT?", "+CGATT: 1"):
             print('------SIM7080G is online------\r\n')
