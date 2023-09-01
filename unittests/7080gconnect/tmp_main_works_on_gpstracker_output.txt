@@ -1,0 +1,63 @@
+SUCCESS MODEM ON !
+b'AT+CCID\r\r\n89882280666038398685\r\n\r\nOK\r\n'
+CCID: 89882280666038398685
+checkNetwork
+b'AT+CFUN=0\r\r\n+CPIN: NOT READY\r\n\r\nOK\r\n'
+ret 1 AT+CFUN=0
++CPIN: NOT READY
+
+OK
+ --
+b'AT+CNMP=38\r\r\nOK\r\n'
+ret 1 AT+CNMP=38
+OK
+ --
+b'AT+CMNB=2\r\r\nOK\r\n'
+ret 1 AT+CMNB=2
+OK
+ --
+b'AT+CFUN=1\r\r\nOK\r\n\r\n+CPIN: READY\r\n\r\nSMS Ready\r\n'
+ret 1 AT+CFUN=1
+OK
+
++CPIN: READY
+
+SMS Ready
+ --
+b'AT+CGATT?\r\r\n+CGATT: 0\r\n\r\nOK\r\n'
+ret 0 AT+CGATT?
++CGATT: 0
+
+OK
+ --
+------SIM7080G is offline, please wait...------
+
+b'AT+CGATT?\r\r\n+CGATT: 1\r\n\r\nOK\r\n'
+ret 1 AT+CGATT?
++CGATT: 1
+
+OK
+ --
+------SIM7080G is online------
+
+b'AT+CSQ\r\r\n+CSQ: 12,99\r\n\r\nOK\r\n'
+ret 1 AT+CSQ
++CSQ: 12,99
+
+OK
+ --
+b'AT+CPSI?\r\r\n+CPSI: LTE NB-IOT,Online,262-01,0xE2A4,35589385,86,EUTRAN-BAND8,3739,0,0,-14,-104,-91,11\r\n\r\nOK\r\n'
+ret 1 AT+CPSI?
++CPSI: LTE NB-IOT,Online,262-01,0xE2A4,35589385,86,EUTRAN-BAND8,3739,0,0,-14,-104,-91,11
+
+OK
+ --
+b'AT+COPS?\r\r\n+COPS: 0,0,"Telekom.de",9\r\n\r\nOK\r\n'
+ret 1 AT+COPS?
++COPS: 0,0,"Telekom.de",9
+
+OK
+ --
+b'AT+CGNAPN\r\r\n+CGNAPN: 1,"iot.1nce.net"\r\n\r\nOK\r\n'
+ret 1 AT+CGNAPN
++CGNAPN: 1,"iot.1nce.net"
