@@ -1,0 +1,98 @@
+------SIM7080G is offline, please wait...------
+
+ret 0 AT+CGATT?
++CGATT: 0
+
+OK
+ --
+------SIM7080G is offline, please wait...------
+
+ret 0 AT+CGATT?
++CGATT: 0
+
+OK
+ --
+------SIM7080G is offline, please wait...------
+
+ret 0 AT+CGATT?
++CGATT: 0
+
+OK
+ --
+------SIM7080G is offline, please wait...------
+
+ret 0 AT+CGATT?
++CGATT: 0
+
+OK
+ --
+------SIM7080G is offline, please wait...------
+
+ret 0 AT+CGATT?
++CGATT: 0
+
+OK
+ --
+------SIM7080G is offline, please wait...------
+
+ret 0 AT+CGATT?
++CGATT: 0
+
+OK
+ --
+------SIM7080G is offline, please wait...------
+
+ret 0 AT+CGATT?
++CGATT: 0
+
+OK
+ --
+------SIM7080G is offline, please wait...------
+
+ret 1 AT+CSQ
++CSQ: 99,99
+
+OK
+ --
+ret 1 AT+CPSI?
++CPSI: NO SERVICE,Online
+
+OK
+ --
+ret 1 AT+COPS?
++COPS: 0
+
+OK
+ --
+ret 1 AT+CGNAPN
++CGNAPN: 0,""
+
+OK
+ --
+ret 1 AT+CNACT=0,1
+OK
+
++APP PDP: 0,DEACTIVE
+ --
+ret 1 AT+CNACT?
++CNACT: 0,0,"0.0.0.0"
++CNACT: 1,0,"0.0.0.0"
++CNACT: 2,0,"0.0.0.0"
++CNACT: 3,0,"0.0.0.0"
+
+OK
+ --
+ret 1 AT+SMCONF="URL",91.228.53.41,1883
+OK
+ --
+ret 1 AT+SMCONF="KEEPTIME",600
+OK
+ --
+ret 1 AT+SMCONF="CLIENTID","89882280666038398685"
+OK
+ --
+ret 0 AT+SMCONN
+ERROR
+ --
+{"count": "2880.1", "wifis": [["N17", "dc15c8b6de93"], ["N17 Gastzugang", "de15c8b6de93"], ["ccsmartnet", "6032b1dec084"], ["437909", "3481c4a80137"], ["Drahtig Gastzugang", "de396fdfb227"], ["Drahtig", "dc396fdfb227"], ["shellyplug-s-B4CA50", "e29806b4ca50"], ["Matumba", "74427ff2a8d4"], ["FRITZ!Box 7490", "f0b01406c278"]], "battery": "AT+CBC\r\r\n+CBC: 0,10,3137\r\n\r\nOK\r\n", "notmoving": false, "time": [2023, 9, 1, 10, 12, 19, 4, 244], "sleeptime": 100}
+publish

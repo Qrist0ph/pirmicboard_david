@@ -1,225 +1,241 @@
-# 01.09.23
-# Modem geht online
-# geht auf GPS Tracker mit abgelötetet Antenne online
+# 28.10.2022
+# pico w deepsleep patch
+# logCall, battery
+# SimCom 7080G + Pico Script
+# PICO Deep Sleep  Test mit DeepSleep und Normal Modus
+# PICO geht entweder in den deepsleep modus oder in den normal modus
+# falls verzeichnis deepsleep existiert dann deepsleep modus, sonst normal modus
 
-#import network
-import time
-import machine 
-from machine import UART, Pin
+# Google Doc mit Kabelbelegung https://docs.google.com/document/d/1RsIvsyK8wx0Kr5VQp8_xyVW1U5oQrc9f_jCxV8jEb8E/edit#heading=h.ysg6t5dq0tcm
+# Video: https://photos.app.goo.gl/m6BXxvXsR5WaHxxM9
+# ON 1(RX), 2(TX); 13 (GND) , 19 (PWR), 36 (3,3V OUT) , 38 (GND), 39 (VSYS)  â†’ AT OK, LED Blinky langsam
+# wegen wifi: https://peppe8o.com/getting-started-with-wifi-on-raspberry-pi-pico-w-and-micropython/
+
+from machine import Pin, ADC , WDT
+from machine import UART
+
+import machine
+import os
 import utime
+import binascii
+from machine import Pin
+import os
+#import picosleep
+import json
+import re
+import network
+import ubinascii
 
+class WdtDummy:
+  
+  def feed(self):
+    print("feed")
+
+
+
+pwr14 = 4  #pin to control the power of the module
+wake_up = 17   
+uart_port = 0
+uart_baute = 115200
+#uart = machine.UART(uart_port, uart_baute, bits=8, parity=None, stop=1)
 uart = UART(1, baudrate=115200,bits=8, parity=None, stop=1, tx=21, rx=47)
-pwr = 4  #pin to control the power of the module
 
+led = Pin(17, Pin.OUT)
+
+if not ("count.txt" in os.listdir()):
+    f = open('count.txt','w')
+    f.write(str(0))
+
+def readStatus():
+    try:
+        #file = open('status.json','a+')
+        f = open('status.json',"r+")
+        serialzed=f.read()
+        #print(serialzed)   
+        status = eval(serialzed)
+        #print("deserialized "+status)
+    except:
+        status={"sleeptime":100,"lastwifis":[],"lastwifiswithgps":[],"notmoving":False}
+    return status
+
+def writeStatus(status):
+    print("writeStatus")
+    print(str(status))
+    file = open('status.json','a+')
+    f = open('status.json',"w+")
+    f.write(str(status))
+    return 
+
+def logCall():
+    f = open('count.txt',"r")
+    x=int(f.read())
+    f.close()
+    print(x)
+    f = open('count.txt','w')
+    f.write(str(x+1))    
+    f.close()
+    return x+1
+
+# zum power toggle muss offenbar 0_1_0 auf GPIO 14 gemacht werden
+def toggleOnOff():
+    #bei aufsteigender Flanke wird immer On Off getoggelt
+    machine.Pin(pwr14, machine.Pin.OUT).value(0)
+    utime.sleep(2)
+    wdt.feed()
+    machine.Pin(pwr14, machine.Pin.OUT).value(1)
+    utime.sleep(2)
+    wdt.feed()
+    #print(waitResp_info()  )
+    machine.Pin(pwr14, machine.Pin.OUT).value(0)
+    utime.sleep(2)
+    wdt.feed()
+    #print(waitResp_info()  )
+
+        
 def waitResp_info():
     prvMills = utime.ticks_ms()
     info = b""
     while (utime.ticks_ms()-prvMills)<2000:        
         if uart.any():
             info = b"".join([info, uart.read(1)])
-    print(info)
-    try:
-        return info.replace(b'\xFE', b'').replace(b'\xFF', b'').decode()
-    except:
-        print("some error")
-    return 
+    #print(info)
+    return info.replace(b'\xFE', b'').replace(b'\xFF', b'').decode()
 
-# zum power toggle muss offenbar 0_1_0 auf GPIO 14 gemacht werden
-def toggleOnOff():
-    #bei aufsteigender Flanke wird immer On Off getoggelt
-    machine.Pin(pwr, machine.Pin.OUT).value(0)
-    utime.sleep(2)
-    machine.Pin(pwr, machine.Pin.OUT).value(1)
-    utime.sleep(2)
-    machine.Pin(pwr, machine.Pin.OUT).value(0)
-    utime.sleep(2)
-    
 def assertModemOn():
     c=0
     while True:
         c=c+1
         if(c>10):
-            return False
-
-        uart.write( b'AT\r\n' )
+            break
+        uart.write( 'AT\r\n'.encode() )
         utime.sleep(2)
+        wdt.feed()
+        uart.write( 'AT\r\n'.encode() )
         recBuff = waitResp_info()
+        #falls modem schon eingeschaltet ist
         if 'OK' in recBuff:
-            print ("modem already powered on")
-            return True
+            print ("modem schon eingeschaltet")
+            break
         else:
-            print("modem is still powered off -> toggleOnOff() ")
-            toggleOnOff()          
-            for i in range(1,10):
-                utime.sleep(2)                
-                # for some reason sometime just sending AT is not enough
-                uart.write( b'AT+CGNSINF\r\n' )
-                utime.sleep(2)
-                recBuff = waitResp_info()
-                if 'OK' in recBuff:
-                    print ("modem now powered on")
-                    return True
-                   
-def getCCID():
-    #Get CCID
-    uart.write("AT+CCID\r\n".encode())
-    utime.sleep(2)
-
-    ccidlong = waitResp_info()
+            print("modem ist noch ausgeschaltet -> toggleOnOff() ")
+            toggleOnOff()
+            utime.sleep(2)
+            wdt.feed()
+            
+def assertModemOff():
     c=0
-    ccid=""
     while True:
         c=c+1
         if(c>10):
-            break
-        try:
-            ccid = ccidlong.splitlines()[2]
-            break
-        except:
+            break       
+        uart.write( 'AT\r\n'.encode() )
+        utime.sleep(2)
+        wdt.feed()
+        uart.write( 'AT\r\n'.encode() )
+        recBuff = waitResp_info()
+        #falls modem schon eingeschaltet ist
+        if 'OK' in recBuff:
+            print ("modem noch eingeschaltet -> toggleOnOff()")
+            toggleOnOff()
             utime.sleep(2)
-
-            
-    return str(ccid)    
-
-#Send AT command
-def sendAt(cmd,back,timeout=1000):
-    uart.write((cmd+'\r\n').encode())
-    utime.sleep(2)
-    recBuff = waitResp_info()
-    
-    if back in recBuff :
-        print("ret 1 " + recBuff+" --")
-        return 1   
-    else:
-        print("ret 0 " + recBuff+" --")
-        return 0
-
-def checkNetwork():
-    print("checkNetwork")
-    # https://m2msupport.net/m2msupport/atcfun-set-phone-functionality/
-    # =1 auf volle FunktionalitÃ¤t setzen
-   
-    sendAt("AT+CFUN=0","OK")
-   
-    
-    #https://www.twilio.com/docs/iot/supersim/cellular-modem-knowledge-base/simcom-supersim
-    #If you wish to limit comms to LTE only, i.e., no GSM, send AT+CNMP=38.
-    sendAt("AT+CNMP=38","OK")      #Select LTE mode
-
-    #https://www.twilio.com/docs/iot/supersim/cellular-modem-knowledge-base/simcom-supersim
-    #Set the modemâ€™s Radio Access Technology (RAT) preference to Cat-M1 when you are connecting to LTE. To do so, issue AT+CMNB=1.
-    sendAt("AT+CMNB=2","OK")       #Select NB-IoT mode,if Cat-Mï¼Œplease set to 1
-
-    utime.sleep(2)
-
-    sendAt("AT+CFUN=1","OK")
-    utime.sleep(2)
-
-        
-    ci=0
-    while True:
-        ci=ci+1
-        if(ci>10):
-            print('------RESET Modem wont go online------\r\n')
-            machine.reset()
-        if sendAt("AT+CGATT?", "+CGATT: 1"):
-            print('------SIM7080G is online------\r\n')
-            break
+            wdt.feed()
+            print("Erwarte 'NORMAL POWER DOWN' Message")
+            utime.sleep(3)
+            wdt.feed()
+            print(waitResp_info() )
         else:
-            print('------SIM7080G is offline, please wait...------\r\n')
-            utime.sleep(2)
-            continue
+            print ("modem ist jetzt ausgeschaltet  ")
+            break
+            
         
-    #AT+CSQ AT command returns the signal strength of the device.
-    #https://m2msupport.net/m2msupport/atcsq-signal-quality/
-    sendAt("AT+CSQ","OK")
+        
 
-    #AT+CPSI command is used to return UE system information.
-    #https://m2msupport.net/m2msupport/atcpsi-inquiring-ue-system-information/
-    sendAt("AT+CPSI?","OK")
-
-    #AT+COPS AT command forces the mobile terminal to select and register the GSM/UMTS/EPS network.
-    #The device returns the list of networks that are avaialble to connect.
-    #https://m2msupport.net/m2msupport/atcops-plmn-selection/
-    sendAt("AT+COPS?","OK")
-
-    #Verify that APN is assigned using  the AT+CGNAPN comman
-    sendAt("AT+CGNAPN","OK")
-
-
-    #Activate a data connection: AT+CNACT=0,1
-    sendAt('AT+CNACT=0,1','OK')
-    #Optionally, obtain an IP address and the current connection status with
-    sendAt('AT+CNACT?','OK')
-
-    #sendAt("AT+CPSI?","OK")
-
-def mqttPublish(ccid):
-    print("mqttPublish")
+def getGpsInfo(woerterbuch):
+    #return "AT+CGNSINF +CGNSINF: 1,1,20220223101738.000,50.902806,6.851354,44.137,0.00,,0,,0.9,1.3,0.9,,11,,6.6,12.0 OK"
+    # Coords = 50.902806,6.851354,44.137
    
-    
-    ####
-    # mqtt initialisieren
-    ###
-    # MQTT Server info
-    mqtt_host = '91.228.53.41'           
-    mqtt_port = '1883'
-
-    #uart.write(('AT+SMCONF=\"URL\",'+mqtt_host+','+mqtt_port+'\r\n').encode() )
-    sendAt('AT+SMCONF=\"URL\",'+mqtt_host+','+mqtt_port,"OK")
-    #sendAt('AT+SMCONF=\"USERNAME\",\"christor\"','OK',2000)
-    #sendAt('AT+SMCONF=\"PASSWORD\",\"Christor#123\"','OK',2000)
-    #uart.write(('AT+SMCONF=\"KEEPTIME\",600\r\n').encode() )
-    sendAt('AT+SMCONF=\"KEEPTIME\",600',"OK")
-    #uart.write(('AT+SMCONF=\"CLIENTID\",\"'+ccid+'\"\r\n').encode() )
-    sendAt('AT+SMCONF=\"CLIENTID\",\"'+ccid+'\"',"OK")
-    #uart.write(('AT+SMCONN\r\n').encode() )
-    sendAt('AT+SMCONN',"OK")
-    #sendAt('AT+SMSUB=\"testtopic\",1','OK',5000)
-    
-    ##############
-    # mqtt message absenden
-    ##############
-   
-    message="my test message"
-    #verwende ccid als topic
-    publishCommand = 'AT+SMPUB=\"device/'+ccid+'\",'+str(len(message))+',1,0'
-    print("publishing")
-    
-    sendAt(publishCommand,"OK")
-
-    uart.write(message.encode())
-    utime.sleep(2);
-    
-    utime.sleep(2);
-    
-    utime.sleep(2);
-    
-    print(waitResp_info())
-    print("published")
-    
-    
-    # verbindung beenden
-    uart.write( 'AT+SMDISC\r\n'.encode() )
+    print('Start GPS session...')
+    uart.write('AT+CGNSPWR=1\r\n'.encode())
     utime.sleep(2)
-    
+    wdt.feed()
     print(waitResp_info())
+    woerterbuch['geocoords']=[-1.0,-1.0,-1.0]
+    for i in range(1,10):
+        rec_buff = b''
+        uart.write( 'AT+CGNSINF\r\n'.encode() )
+        utime.sleep(2)
+        wdt.feed()
+        rec_buff = waitResp_info()
+        if ',,,,' in rec_buff:
+            print('GPS is not yet ready, loop '+str(i)+': ' +rec_buff)          
+            utime.sleep(1)
+            wdt.feed()
+            continue
+        else:
+           print('My GPS position '+rec_buff)           
+           pattern = re.compile(r'\d+\.\d\d\d\d\d\d,\d+\.\d\d\d\d\d\d,\d+\.\d\d\d')
+           x = pattern.search(rec_buff)
+           #print(x.group(0))
+           try:
+               woerterbuch['geocoords']=json.loads("["+x.group(0)+"]")
+           except:
+               print("gps parse error")
+           break
+        
+    uart.write('AT+CGNSPWR=0\r\n'.encode())
+    utime.sleep(2)
+    wdt.feed()
+    print(waitResp_info())
+    return woerterbuch
+    
 
 
-print("assertModemOn --> Power On")
-modemon=assertModemOn()
-if modemon:
-    print("SUCCESS MODEM ON !")
-else:
-    print("FAILURE !!")
 
-ccid = getCCID()
-## if ccid is printed then sim card was read succesfully
-print('CCID: '+ccid)
+def mqttPublish(ccid,data,runde):
+   
+    for i in range(1,5):
+        data["count"]=str(runde)+'.'+str(i)
+        ####
+        # mqtt initialisieren
+        ###
+        # MQTT Server info
+        mqtt_host = '91.228.53.41'           
+        mqtt_port = '1883'
 
-checkNetwork()
+        #uart.write(('AT+SMCONF=\"URL\",'+mqtt_host+','+mqtt_port+'\r\n').encode() )
+        sendAt('AT+SMCONF=\"URL\",'+mqtt_host+','+mqtt_port,"OK")
+        #sendAt('AT+SMCONF=\"USERNAME\",\"christor\"','OK',2000)
+        #sendAt('AT+SMCONF=\"PASSWORD\",\"Christor#123\"','OK',2000)
+        #uart.write(('AT+SMCONF=\"KEEPTIME\",600\r\n').encode() )
+        sendAt('AT+SMCONF=\"KEEPTIME\",600',"OK")
+        #uart.write(('AT+SMCONF=\"CLIENTID\",\"'+ccid+'\"\r\n').encode() )
+        sendAt('AT+SMCONF=\"CLIENTID\",\"'+ccid+'\"',"OK")
+        #uart.write(('AT+SMCONN\r\n').encode() )
+        sendAt('AT+SMCONN',"OK")
+        #sendAt('AT+SMSUB=\"testtopic\",1','OK',5000)
+        
+        ##############
+        # mqtt message absenden
+        ##############
+        jsonStr = json.dumps(data)
+        print(jsonStr)
+        message=str(jsonStr)
+        #verwende ccid als topic
+        publishCommand = 'AT+SMPUB=\"device/'+ccid+'\",'+str(len(message))+',1,0'
+        print("publish")
+        
+        sendAt(publishCommand,"OK")
 
-mqttPublish(ccid)
-
-
-
+        
+        uart.write(message.encode())
+        utime.sleep(2);
+        wdt.feed()
+        utime.sleep(2);
+        wdt.feed()
+        utime.sleep(2);
+        wdt.feed()
+        print(waitResp_info())
+        print("published")
+        
+        
+        # verbindung beende
