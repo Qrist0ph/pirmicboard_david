@@ -134,6 +134,7 @@ def checkNetwork():
     #AT+CPSI command is used to return UE system information.
     #https://m2msupport.net/m2msupport/atcpsi-inquiring-ue-system-information/
     sendAt("AT+CPSI?","OK")
+    #+CPSI: LTE NB-IOT,Online,262-01,0xE2A4,35589385,86,EUTRAN-BAND8,3739,0,0,-14,-104,-91,11
 
     #AT+COPS AT command forces the mobile terminal to select and register the GSM/UMTS/EPS network.
     #The device returns the list of networks that are avaialble to connect.
@@ -142,7 +143,7 @@ def checkNetwork():
 
     #Verify that APN is assigned using  the AT+CGNAPN comman
     sendAt("AT+CGNAPN","OK")
-
+    #+CGNAPN: 1,"iot.1nce.net"
 
     #Activate a data connection: AT+CNACT=0,1
     sendAt('AT+CNACT=0,1','OK')
