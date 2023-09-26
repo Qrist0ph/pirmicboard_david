@@ -120,9 +120,11 @@ def checkNetwork():
     ci=0
     while True:
         ci=ci+1
-        if(ci>40):
+        print("ci: "+str(ci))
+        if(ci>50):
             print('------RESET Modem wont go online------\r\n')
-            machine.reset()
+            #machine.reset()
+            continue
         if sendAt("AT+CGATT?", "+CGATT: 1"):
             print('------SIM7080G is online------\r\n')
             break
