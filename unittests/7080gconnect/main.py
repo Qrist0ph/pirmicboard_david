@@ -120,6 +120,8 @@ def checkNetwork():
     ci=0
     while True:
         ci=ci+1
+        sendAt("AT+CGATT=1","OK")
+        utime.sleep(2)
         print("ci: "+str(ci))
         if(ci>50):
             print('------RESET Modem wont go online------\r\n')
@@ -132,6 +134,8 @@ def checkNetwork():
             print('------SIM7080G is offline, please wait...------\r\n')
             utime.sleep(2)
             continue
+        
+        
         
     #AT+CSQ AT command returns the signal strength of the device.
     #https://m2msupport.net/m2msupport/atcsq-signal-quality/
@@ -225,4 +229,5 @@ checkNetwork()
 
 mqttPublish(ccid)
 
-
+# now restart everything
+machine.reset()
