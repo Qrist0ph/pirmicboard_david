@@ -1,5 +1,7 @@
 # 01.09.23
 # Unit Test for going online with modem
+# 26.09.23 adding AT+CGATT=1
+
 import time
 import machine 
 from machine import UART, Pin
@@ -112,11 +114,13 @@ def checkNetwork():
     sendAt("AT+CFUN=1","OK")
     utime.sleep(2)
 
-        
+    sendAt("AT+CGATT=1","OK")
+    utime.sleep(2)
+
     ci=0
     while True:
         ci=ci+1
-        if(ci>10):
+        if(ci>40):
             print('------RESET Modem wont go online------\r\n')
             machine.reset()
         if sendAt("AT+CGATT?", "+CGATT: 1"):
