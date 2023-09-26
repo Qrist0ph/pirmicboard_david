@@ -124,7 +124,7 @@ def checkNetwork():
         if(ci>50):
             print('------RESET Modem wont go online------\r\n')
             #machine.reset()
-            continue
+            break
         if sendAt("AT+CGATT?", "+CGATT: 1"):
             print('------SIM7080G is online------\r\n')
             break
