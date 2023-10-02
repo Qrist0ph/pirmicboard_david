@@ -1,3 +1,6 @@
+
+https://docs.google.com/document/d/1QbcJ9q0AnhmWYFL9N2yTIqmDUzpVPqicOUhr_ns5_PE/edit
+
 # pirmicboard_david
  repository for interchanging files and test code
 
