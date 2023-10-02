@@ -94,10 +94,14 @@ print("assertModemOff --> Power On")
 assertModemOff()
 
 #hier die deepsleep zeit anpassen
-print("90 sek deepsleep")
+print("30 sek deepsleep")
 print("jetzt müssen 0.01 Ampere gemessen werden")
-machine.deepsleep(90000)
+machine.deepsleep(30000)
+#Thonny will say
+#PROBLEM IN THONNY'S BACK-END: Exception while handling 'Run' (ConnectionError: EOF).
+#See Thonny's backend.log for more info.
+#You may need to press "Stop/Restart" or hard-reset your MicroPython device and try again.
 print("deepsleep vorbei")
-print("90 sek normal sleep")
-utime.sleep(90)
+print("30 sek normal sleep")
+utime.sleep(30)
 print("jetzt müssen 0.1 Ampere gemessen werden")
