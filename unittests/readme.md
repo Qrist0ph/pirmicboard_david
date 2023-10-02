@@ -7,6 +7,6 @@
 | **Oma**                  |      |   |
 | LED Green                | 15   |   |
 | LED Red                  | 16   |   |
-| PIR digital values (0,1) | 6    |   |
-| PIR analog ADC           | 7    |   |
-| Microphone ADC           |      |   |
+| PIR digital values (0,1) | 10    |   |
+| PIR analog ADC           | --   |   |
+| Microphone ADC           |   ADC(Pin(3))   |   |
