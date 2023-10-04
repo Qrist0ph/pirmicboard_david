@@ -23,6 +23,8 @@ pir_pin = Pin(10, Pin.IN)
 pir_pin.irq(trigger=Pin.IRQ_RISING, handler=pir_detected)
 
 # Keep the program running
+c=0
 while True:
+    c=c+4
     utime.sleep(4)  # Sleep to prevent the program from exiting immediately
-    print("running")
+    print("running "+ str(c)+" sekunden")
