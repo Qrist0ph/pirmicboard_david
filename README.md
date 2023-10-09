@@ -4,7 +4,8 @@ https://docs.google.com/document/d/1QbcJ9q0AnhmWYFL9N2yTIqmDUzpVPqicOUhr_ns5_PE/
 ESP32
 
 https://www.espressif.com/sites/default/files/documentation/esp32-s3-wroom-1_wroom-1u_datasheet_en.pdf
-
+# Enclosure 
+https://www.shinyenclosure.com/
 # pirmicboard_david
  repository for interchanging files and test code
 
