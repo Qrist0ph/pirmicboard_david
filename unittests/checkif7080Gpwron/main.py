@@ -7,6 +7,15 @@ import utime
 uart = UART(1, baudrate=115200,bits=8, parity=None, stop=1, tx=21, rx=47)
 pwr = 4  #pin to control the power of the module
 
+
+modemonpin =machine.Pin(42, machine.Pin.IN)
+
+while True:
+    print("PIN 42 for Modem Power")
+    print(modemonpin.value())
+    utime.sleep(0.2)
+    
+    
 def waitResp_info():
     prvMills = utime.ticks_ms()
     info = b""
@@ -30,7 +39,7 @@ def toggleOnOff():
     machine.Pin(pwr, machine.Pin.OUT).value(0)
     utime.sleep(2)
 
-modemonpin =machine.Pin(42, machine.Pin.IN)
+
 def assertModemOn():
     c=0
     while True:
