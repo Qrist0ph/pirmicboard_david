@@ -1,4 +1,5 @@
 # checking if USB cable is connected for power supply
+# assumption 3.3 means connected
 # green led on when connected
 # red led on when disconnected
 from machine import Pin, ADC
