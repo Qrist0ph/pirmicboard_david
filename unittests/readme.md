@@ -11,3 +11,9 @@
 | PIR analog ADC           | --   |   |
 | Microphone ADC           |   ADC(Pin(3))   |   |
 | Vin Current           |   42   |   |
+| offner Pin für Sensor         |      |   |
+| offner ADC für Sensor         |      |   |
+| Modem On           |      |   |
+| Modem Battery Voltage           |      |   |
+| Charging (anstelle orange LED)         |      |   |
+| Fully Charged (anstelle blue LED)         |      |   |
