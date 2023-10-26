@@ -1,8 +1,11 @@
 # deepsleep unit test 
 # erst modem ausschalten
 # dann deepsleep
-# verbrauch mus unter 0.01 Ampere fallen
+# verbrauch muss auf 0.004 Ampere fallen
 # messen mit einem USB Stick messgerät
+
+# 26.10.2023 getest mit Olesia GPS rev2 (Board Nr. 8) 
+
 import time
 import machine 
 from machine import UART, Pin
