@@ -5,6 +5,7 @@
 | 7080G PWR                | 4    |   |
 | LED Orange               | 17   |   |
 | **Oma**                  |      |   |
+| Deep Sleep | |[hier](deepsleep/main.py)|
 | LED Green                | 15   |   |
 | LED Red                  | 16   |   |
 | PIR digital values (0,1) | 10    |   |
