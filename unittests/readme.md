@@ -1,4 +1,4 @@
-| Function                 | GPIO |   |
+| Function                 | GPIO |  Unit Test |
 |--------------------------|------|---|
 | 7080G RX                 | 47  |   |
 | 7080G TX                 | 21   |   |
@@ -10,3 +10,4 @@
 | PIR digital values (0,1) | 10    |   |
 | PIR analog ADC           | --   |   |
 | Microphone ADC           |   ADC(Pin(3))   |   |
+| Vin Current           |   42   |   |
