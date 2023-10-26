@@ -13,7 +13,7 @@
 | Vin Current           |   42   | [hier](checkif7080Gpwron/main.py)  |
 | offner Pin für Sensor         |      |   |
 | offner ADC für Sensor         |      |   |
-| Modem On           |      |   |
-| Modem Battery Voltage           |      |   |
-| Charging (anstelle orange LED)         |      |   |
-| Fully Charged (anstelle blue LED)         |      |   |
+| Modem On (instead of blue LED1)          |      |   |
+| Battery Voltage           |      |   |
+| Charging (instead of orange  LED3)         |      |   |
+| Fully Charged (instead of blue LED2 )         |      |   |
