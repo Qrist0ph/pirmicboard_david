@@ -12,8 +12,8 @@
 | PIR analog ADC           | --   |   |
 | Microphone ADC           |   ADC(Pin(3))   | [hier](microphone/main.py)  |
 | Vin Current           |   42   | [hier](checkif7080Gpwron/main.py)  |
-| offner Pin für Sensor         |      |   |
-| offner ADC für Sensor         |      |   |
+| Jumper Pin additional Sensor         |      |   |
+| Jumper ADC PIN  additinal analog Sensor         |      |   |
 | Modem On (instead of blue LED1)          |      |   |
 | Battery Voltage           |      |   |
 | Charging (instead of orange  LED3)         |      |   |
