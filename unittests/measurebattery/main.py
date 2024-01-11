@@ -2,7 +2,7 @@
 from machine import Pin, ADC
 from time import sleep
 
-sensor = ADC(Pin(13))
+sensor = ADC(Pin(6))
 
 while True:
     vinValue = sensor.read()
