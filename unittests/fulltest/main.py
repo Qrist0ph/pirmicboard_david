@@ -10,17 +10,33 @@ print("##############################################################")
 print("Test Run")
 print("will take around 2 minutes")
 print("Starting in 10 seconds")
-utime.sleep(10)
+utime.sleep(2)
 
 
 
 #####################################################################################
 print("##############################################################")
+print("checking LEDs")
+
+
+green = Pin(15, Pin.OUT)
+red = Pin(16, Pin.OUT)
+for i in range(5): 
+    green.on()    
+    red.on()    
+    sleep(1)
+    green.off()    
+    red.off()    
+    sleep(1)
+ 
+
+#####################################################################################
+print("##############################################################")
 print("checking PIR on IO10 for 30 seconds")
 print("please make movement in front of PIR")
-pir_pin = Pin(10, Pin.IN)
+pir_pin = Pin(14, Pin.IN)
 
-for i in range(10*30): 
+for i in range(10*3): 
     value = pir_pin.value() 
     print("PIR Value: ",value  )    
     utime.sleep(0.1)
@@ -58,9 +74,9 @@ for i in range(10):
     sleep(0.5)
 ##################################################################################### 
 print("##############################################################")
-print("checking battery voltage on IO13")
+print("checking battery voltage on IO6")
 print("please try with different battery charging levels and not battery")
-sensor = ADC(Pin(13))
+sensor = ADC(Pin(6))
 for i in range(10):
     vinValue = sensor.read()
     voltage = vinValue / 4095.0 * 3.3
@@ -71,7 +87,7 @@ for i in range(10):
 #####################################################################################
 print("##############################################################")
 print("checking microphone on IO3  for 10 seconds")
-sensor = ADC(Pin(3))
+sensor = ADC(Pin(9))
 
 # Wiederholung (Endlos-Schleife)
 for i in range(300): 
@@ -345,5 +361,6 @@ pwm_c = PWM(Pin(8), duty=512)
 pwm_c.freq(500)
 utime.sleep(1)
 pwm_c.deinit()
+
 
 
