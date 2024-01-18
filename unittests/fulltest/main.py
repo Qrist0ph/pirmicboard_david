@@ -19,8 +19,8 @@ print("##############################################################")
 print("checking LEDs")
 
 
-green = Pin(15, Pin.OUT)
-red = Pin(16, Pin.OUT)
+green = Pin(37, Pin.OUT)
+red = Pin(38, Pin.OUT)
 for i in range(5): 
     green.on()    
     red.on()    
@@ -76,7 +76,7 @@ for i in range(10):
 print("##############################################################")
 print("checking battery voltage on IO6")
 print("please try with different battery charging levels and not battery")
-sensor = ADC(Pin(6))
+sensor = ADC(Pin(10))
 for i in range(10):
     vinValue = sensor.read()
     voltage = vinValue / 4095.0 * 3.3
@@ -361,6 +361,7 @@ pwm_c = PWM(Pin(8), duty=512)
 pwm_c.freq(500)
 utime.sleep(1)
 pwm_c.deinit()
+
 
 
 
