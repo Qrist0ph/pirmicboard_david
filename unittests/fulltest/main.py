@@ -294,7 +294,11 @@ def checkNetwork():
 def mqttPublish(ccid):
     print("mqttPublish")
    
-    
+    sensor = ADC(Pin(10))
+    vinValue = sensor.read()
+    voltage = str(vinValue / 4095.0 * 3.3)
+   
+    ccid=ccid+ " "+voltage
     ####
     # mqtt initialisieren
     ###
@@ -356,7 +360,9 @@ print('CCID: '+ccid)
 
 checkNetwork()
 
-mqttPublish(ccid)
+print("MQTT Publish forever")
+while True:
+    mqttPublish(ccid)
 
 # now restart everything
 machine.reset()
