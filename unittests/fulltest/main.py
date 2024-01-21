@@ -297,8 +297,10 @@ def mqttPublish(ccid):
     sensor = ADC(Pin(10))
     vinValue = sensor.read()
     voltage = str(vinValue / 4095.0 * 3.3)
-   
-    ccid=ccid+ " "+voltage
+    
+    chrg_pin = Pin(11, Pin.IN)
+    
+    ccid=ccid+ " "+voltage + " Charging: "+str(chrg_pin.value() )
     ####
     # mqtt initialisieren
     ###
@@ -391,6 +393,7 @@ pwm_c = PWM(Pin(8), duty=512)
 pwm_c.freq(500)
 utime.sleep(1)
 pwm_c.deinit()
+
 
 
 
